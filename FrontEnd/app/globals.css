@@ -6,10 +6,14 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-cabecalho: #2D3142;
+  --color-detalhe: #E1D8CE;
+  --color-destaque: #D4AF37;
+  --color-fundo: #FDFBF7;
+  --color-texto: #4F5D75;
+
+  --font-titulo: var(--font-montserrat);
+  --font-texto: var(--font-inter);
 }
 
 @media (prefers-color-scheme: dark) {
