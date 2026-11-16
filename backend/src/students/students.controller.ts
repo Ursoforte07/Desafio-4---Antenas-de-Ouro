@@ -16,16 +16,18 @@ export class StudentsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Listar alunos com busca por nome e ordenação' })
+  @ApiOperation({ summary: 'Listar alunos com busca por nome, filtro por turma e ordenação' })
   @ApiQuery({ name: 'search', required: false, description: 'Filtrar por nome do aluno' })
+  @ApiQuery({ name: 'classId', required: false, description: 'Filtrar por ID da turma' })
   @ApiQuery({ name: 'sortBy', required: false, enum: ['status', 'class'] })
   @ApiQuery({ name: 'order', required: false, enum: ['asc', 'desc'] })
   findAll(
     @Query('search') search?: string,
+    @Query('classId') classId?: string,
     @Query('sortBy') sortBy?: 'status' | 'class',
     @Query('order') order?: 'asc' | 'desc',
   ) {
-    return this.studentsService.findAll(search, sortBy, order);
+    return this.studentsService.findAll(search, sortBy, order, classId);
   }
 
   @Get(':id')

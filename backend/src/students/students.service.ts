@@ -9,10 +9,10 @@ export class StudentsService {
     { id: '1', name: 'AMANDA CASTRO NOGUEIRA BARBOSA', classId: '1', presentLessons: 8, totalLessons: 9 },
     { id: '2', name: 'ARTHUR OLIVEIRA SANTOS COSTA', classId: '2', presentLessons: 19, totalLessons: 25 },
     { id: '3', name: 'ALICE REIS OLIVEIRA ARAÚJO', classId: '1', presentLessons: 10, totalLessons: 11 },
-    { id: '4', name: 'AMÉLIO CARDOSO FERREIRO DE MELO', classId: '4', presentLessons: 7, totalLessons: 10 },
+    { id: '4', name: 'AMÉLIO CARDOSO FERREIRO DE MELO', classId: '2', presentLessons: 7, totalLessons: 10 },
   ];
 
-  private calculateStatus(present: number, total: number) {
+  calculateStatus(present: number, total: number) {
     const percentage = total === 0 ? 100 : Math.round((present / total) * 100);
     let statusColor: 'RED' | 'YELLOW' | 'GREEN' = 'GREEN';
 
@@ -40,13 +40,19 @@ export class StudentsService {
     };
   }
 
-  findAll(search?: string, sortBy?: 'status' | 'class', order: 'asc' | 'desc' = 'asc') {
+  findAll(search?: string, sortBy?: 'status' | 'class', order: 'asc' | 'desc' = 'asc', classId?: string) {
     let result = this.students.map((student) => ({
       id: student.id,
       name: student.name,
       classId: student.classId,
+      presentLessons: student.presentLessons,
+      totalLessons: student.totalLessons,
       ...this.calculateStatus(student.presentLessons, student.totalLessons),
     }));
+
+    if (classId) {
+      result = result.filter((s) => s.classId === classId);
+    }
 
     if (search) {
       const term = search.toLowerCase();
@@ -86,9 +92,23 @@ export class StudentsService {
       classId: student.classId,
       presentLessons: student.presentLessons,
       absentLessons: student.totalLessons - student.presentLessons,
+      totalLessons: student.totalLessons,
       attendancePercentage,
       statusColor,
     };
+  }
+
+  // Método chamado automaticamente quando uma aula é registrada
+  registerAttendance(studentId: string, present: boolean) {
+    const student = this.students.find((s) => s.id === studentId);
+    if (!student) {
+      throw new NotFoundException(`Aluno com ID ${studentId} não encontrado`);
+    }
+    student.totalLessons += 1;
+    if (present) {
+      student.presentLessons += 1;
+    }
+    return this.findOne(studentId);
   }
 
   update(id: string, updateStudentDto: UpdateStudentDto) {

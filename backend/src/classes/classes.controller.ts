@@ -16,9 +16,15 @@ export class ClassesController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Listar todas as turmas com estatísticas' })
+  @ApiOperation({ summary: 'Listar todas as turmas com estatísticas em tempo real' })
   findAll() {
     return this.classesService.findAll();
+  }
+
+  @Get('dashboard')
+  @ApiOperation({ summary: 'Resumo geral de indicadores para o Dashboard' })
+  getDashboard() {
+    return this.classesService.getDashboard();
   }
 
   @Get(':id')

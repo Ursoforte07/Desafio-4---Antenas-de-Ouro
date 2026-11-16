@@ -2,9 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 import { ClassEntity } from './entities/class.entity';
+import { StudentsService } from '../students/students.service';
 
 @Injectable()
 export class ClassesService {
+  constructor(private readonly studentsService: StudentsService) {}
+
   private classes: ClassEntity[] = [
     { id: '1', name: 'TURMA 1' },
     { id: '2', name: 'TURMA 2' },
@@ -20,15 +23,57 @@ export class ClassesService {
   }
 
   findAll() {
-    return this.classes.map((turma) => ({
-      id: turma.id,
-      name: turma.name,
-      totalStudents: 20,
-      totalLessons: 10,
-      lowFrequencyCount: 2,
-      presentPercentage: 88,
-      absentPercentage: 12,
-    }));
+    const allStudents = this.studentsService.findAll();
+
+    return this.classes.map((turma) => {
+      const classStudents = allStudents.filter((s) => s.classId === turma.id);
+      const totalStudents = classStudents.length;
+      const totalLessons =
+        totalStudents > 0 ? Math.max(...classStudents.map((s) => s.totalLessons)) : 0;
+      const lowFrequencyCount = classStudents.filter((s) => s.statusColor === 'RED').length;
+      const presentPercentage =
+        totalStudents > 0
+          ? Math.round(
+              classStudents.reduce((acc, s) => acc + s.attendancePercentage, 0) / totalStudents,
+            )
+          : 100;
+
+      return {
+        id: turma.id,
+        name: turma.name,
+        totalStudents,
+        totalLessons,
+        lowFrequencyCount,
+        presentPercentage,
+        absentPercentage: 100 - presentPercentage,
+      };
+    });
+  }
+
+  getDashboard() {
+    const classesStats = this.findAll();
+    const allStudents = this.studentsService.findAll();
+
+    const totalClasses = classesStats.length;
+    const totalStudents = allStudents.length;
+    const lowFrequencyStudents = allStudents.filter((s) => s.statusColor === 'RED').length;
+    const warningStudents = allStudents.filter((s) => s.statusColor === 'YELLOW').length;
+    const healthyStudents = allStudents.filter((s) => s.statusColor === 'GREEN').length;
+
+    const overallPresentPercentage =
+      totalStudents > 0
+        ? Math.round(allStudents.reduce((acc, s) => acc + s.attendancePercentage, 0) / totalStudents)
+        : 100;
+
+    return {
+      totalClasses,
+      totalStudents,
+      lowFrequencyStudents,
+      warningStudents,
+      healthyStudents,
+      overallPresentPercentage,
+      overallAbsentPercentage: 100 - overallPresentPercentage,
+    };
   }
 
   findOne(id: string) {
