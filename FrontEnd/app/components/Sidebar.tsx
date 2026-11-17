@@ -1,68 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-type ItemMenuProps = {
-  href: string;
-  icone: string;
-  texto: string;
-  ativo: boolean;
-  aoClicar: () => void;
-};
-
-function ItemMenu({ href, icone, texto, ativo, aoClicar }: ItemMenuProps) {
-  return (
-    <Link
-      href={href}
-      onClick={aoClicar}
-      aria-current={ativo ? "page" : undefined}
-      className={`group flex items-center gap-4 px-6 py-4 text-xl uppercase ${
-        ativo
-          ? "bg-cabecalho text-fundo"
-          : "text-texto hover:bg-detalhe hover:text-fundo"
-      }`}
-    >
-      <img
-        src={icone}
-        alt=""
-        className={`h-8 w-8 ${
-          ativo
-            ? "brightness-0 invert"
-            : "group-hover:brightness-0 group-hover:invert"
-        }`}
-      />
-      {texto}
-    </Link>
-  );
-}
-
-type IndicadorProps = {
-  rotulo: string;
-  valor: string | number;
-  href?: string;
-  alerta?: boolean;
-};
-
-function Indicador({ rotulo, valor, href, alerta = false }: IndicadorProps) {
-  const conteudo = (
-    <div className="flex justify-between gap-2">
-      <span>{rotulo}</span>
-      <strong className={alerta ? "text-red-600" : ""}>{valor}</strong>
-    </div>
-  );
-
-  if (href) {
-    return (
-      <Link href={href} className="block px-2 py-1 hover:bg-detalhe/40">
-        {conteudo}
-      </Link>
-    );
-  }
-
-  return <div className="px-2 py-1">{conteudo}</div>;
-}
+import { usePathname, useRouter } from "next/navigation";
 
 type SidebarProps = {
   totalAlunos: number;
@@ -77,78 +16,80 @@ export default function Sidebar({
   presencaMedia,
   alunosBaixaFrequencia,
 }: SidebarProps) {
-  const temAlerta = alunosBaixaFrequencia > 0;
-  const [aberto, setAberto] = useState(false);
-  const caminho = usePathname();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isTurmas = pathname.startsWith("/turmas") || pathname.startsWith("/chamada");
+  const isAlunos = pathname.startsWith("/alunos");
+
+  const handleSair = () => {
+    localStorage.removeItem("usuarioLogado");
+    router.push("/login");
+  };
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setAberto(!aberto)}
-        aria-label={aberto ? "Fechar menu" : "Abrir menu"}
-        className="relative z-[60] flex items-center self-start p-3 text-texto md:hidden"
-      >
-        <svg
-          className="h-8 w-8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          viewBox="0 0 24 24"
+    <aside className="w-full md:w-64 bg-[#FDFBF7] border-r border-gray-300 flex flex-col justify-between">
+      <div>
+        <Link
+          href="/turmas"
+          className={`flex items-center gap-3 px-6 py-4 border-b border-gray-300 uppercase font-medium transition-colors ${
+            isTurmas
+              ? "bg-[#2D3142] text-white"
+              : "bg-transparent text-[#4F5D75] hover:bg-[#E1D8CE]"
+          }`}
         >
-          <path d={aberto ? "M6 6l12 12M18 6L6 18" : "M4 6h16M4 12h16M4 18h16"} />
-        </svg>
-      </button>
-
-      {aberto && (
-        <div
-          onClick={() => setAberto(false)}
-          className="absolute inset-0 z-40 bg-black/50 md:hidden"
-        />
-      )}
-
-      <aside
-        className={`absolute inset-y-0 left-0 z-50 flex w-64 shrink-0 flex-col border-r border-texto bg-white pt-14 transition-transform md:static md:translate-x-0 md:pt-0 ${
-          aberto ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <nav className="divide-y divide-texto">
-          <ItemMenu
-            href="/turmas"
-            icone="/people.png"
-            texto="Turmas"
-            ativo={caminho.startsWith("/turmas")}
-            aoClicar={() => setAberto(false)}
+          <img
+            src="/people.png"
+            alt="Turmas"
+            className={`w-6 h-6 ${isTurmas ? "brightness-0 invert" : ""}`}
           />
-          <ItemMenu
-            href="/alunos"
-            icone="/person.png"
-            texto="Alunos"
-            ativo={caminho.startsWith("/alunos")}
-            aoClicar={() => setAberto(false)}
-          />
-        </nav>
+          <span>TURMAS</span>
+        </Link>
 
-        <section className="flex flex-col gap-1 border-t border-texto px-4 py-4 text-base">
-          <Indicador rotulo="Total de alunos" valor={totalAlunos} />
-          <Indicador rotulo="Aulas cadastradas" valor={aulasCadastradas} />
-          <Indicador rotulo="Presença média" valor={`${presencaMedia}%`} />
-          <Indicador
-            rotulo="Baixa frequência"
-            valor={alunosBaixaFrequencia}
-            alerta={temAlerta}
-            href={temAlerta ? "/alunos?filtro=baixa-frequencia" : undefined}
+        <Link
+          href="/alunos"
+          className={`flex items-center gap-3 px-6 py-4 border-b border-gray-300 uppercase font-medium transition-colors ${
+            isAlunos
+              ? "bg-[#2D3142] text-white"
+              : "bg-transparent text-[#4F5D75] hover:bg-[#E1D8CE]"
+          }`}
+        >
+          <img
+            src="/person.png"
+            alt="Alunos"
+            className={`w-6 h-6 ${isAlunos ? "brightness-0 invert" : ""}`}
           />
-        </section>
+          <span>ALUNOS</span>
+        </Link>
 
+        <div className="p-6 flex flex-col gap-5 text-[#4F5D75] text-base font-normal normal-case">
+          <p>
+            Total de alunos: <span className="font-semibold">{totalAlunos}</span>
+          </p>
+          <p>
+            Aulas cadastradas:{" "}
+            <span className="font-semibold">{aulasCadastradas}</span>
+          </p>
+          <p>
+            Presença média:{" "}
+            <span className="font-semibold">{presencaMedia}%</span>
+          </p>
+          <p>
+            Baixa frequência:{" "}
+            <span className="font-semibold">{alunosBaixaFrequencia}</span>
+          </p>
+        </div>
+      </div>
+
+      <div className="p-6 border-t border-gray-300">
         <button
           type="button"
-          className="mt-auto border-t border-texto px-6 py-4 text-left text-lg hover:bg-detalhe hover:text-fundo"
+          onClick={handleSair}
+          className="w-full py-2 px-4 rounded-lg border border-[#4F5D75] text-[#4F5D75] hover:bg-[#2D3142] hover:text-white transition-colors text-sm font-semibold uppercase cursor-pointer"
         >
-          Sair
+          SAIR DA CONTA
         </button>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 }

@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: antenas-de-ouro-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: antenas_de_ouro
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./sql/02_views.sql:/docker-entrypoint-initdb.d/02_views.sql:ro
+      - ./sql/03_seed.sql:/docker-entrypoint-initdb.d/03_seed.sql:ro
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
