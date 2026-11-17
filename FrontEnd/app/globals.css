@@ -1,16 +1,154 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-inter), Arial, sans-serif;
-  --font-heading: var(--font-montserrat), sans-serif;
+:root {
+  --bg-page: #FDFBF7;
+  --bg-card: #FFFFFF;
+  --text-main: #4F5D75;
+  --text-strong: #2D3142;
+  --border-card: rgba(79, 93, 117, 0.45);
+}
+
+html.dark {
+  --bg-page: #141720;
+  --bg-card: #1E2230;
+  --text-main: #CBD5E1;
+  --text-strong: #F8FAFC;
+  --border-card: rgba(148, 163, 184, 0.25);
 }
 
 body {
-  background-color: #FDFBF7;
-  color: #4F5D75;
-  font-family: var(--font-inter), sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-h1, h2, h3 {
-  font-family: var(--font-montserrat), sans-serif;
+html.dark > body > div,
+html.dark main {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+}
+
+html.dark .bg-white,
+html.dark aside,
+html.dark .fixed > div,
+html.dark .fixed > form {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+html.dark h2,
+html.dark h3,
+html.dark p,
+html.dark span,
+html.dark label,
+html.dark a {
+  color: var(--text-main);
+}
+
+html.dark .text-white,
+html.dark .text-white span,
+html.dark .text-white div {
+  color: #FFFFFF;
+}
+
+/* Etiqueta de cargo (ADMIN / PROFESSOR) com alto contraste no Dark Mode */
+html.dark .badge-cargo {
+  background-color: #2C3347;
+  color: #D4AF37;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+}
+
+/* Menus de filtro (STATUS e TURMA) no Light Mode e Dark Mode */
+.menu-dropdown {
+  background-color: #FDFBF7;
+  color: #4F5D75;
+  border: 1px solid #4F5D75;
+}
+
+.menu-dropdown-titulo {
+  color: rgba(45, 49, 66, 0.65);
+}
+
+.menu-dropdown-item {
+  color: #4F5D75;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.menu-dropdown-item:hover {
+  background-color: #E1D8CE;
+  color: #2D3142;
+}
+
+.menu-dropdown-ativo {
+  background-color: rgba(225, 216, 206, 0.55);
+  color: #2D3142;
+  font-weight: 700;
+}
+
+html.dark .menu-dropdown {
+  background-color: #1E2230;
+  color: #CBD5E1;
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+html.dark .menu-dropdown-titulo {
+  color: #94A3B8;
+}
+
+html.dark .menu-dropdown-item {
+  color: #CBD5E1;
+}
+
+html.dark .menu-dropdown-item:hover {
+  background-color: #2C3347;
+  color: #FFFFFF;
+}
+
+html.dark .menu-dropdown-ativo {
+  background-color: #2C3347;
+  color: #D4AF37;
+  font-weight: 700;
+}
+
+html.dark .menu-dropdown .status-alta {
+  color: #4ADE80;
+}
+
+html.dark .menu-dropdown .status-media {
+  color: #FBBF24;
+}
+
+html.dark .menu-dropdown .status-baixa {
+  color: #F87171;
+}
+
+/* Ícones nítidos no Dark Mode */
+html.dark aside img,
+html.dark img[src*="trash"],
+html.dark img[src*="lupa"],
+html.dark img[src*="lapis"],
+html.dark img[src*="add_circle"],
+html.dark img[src*="check_"],
+html.dark .icone-lapis {
+  filter: brightness(0) invert(0.92);
+}
+
+/* Setas e legendas do Gráfico de Pizza legíveis no Dark Mode */
+html.dark svg path,
+html.dark svg polyline,
+html.dark svg text {
+  color: #CBD5E1;
+}
+
+/* Células de dias de outros meses no Calendário */
+html.dark .celula-fora-mes {
+  background-color: #161923;
+  color: rgba(203, 213, 225, 0.35);
+}
+
+html.dark input,
+html.dark select {
+  background-color: #161923;
+  color: #F8FAFC;
+  border-color: #334155;
 }

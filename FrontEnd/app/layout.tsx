@@ -1,33 +1,28 @@
 import type { Metadata } from "next";
-import { Montserrat, Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
+import ThemeToggle from "./components/ThemeToggle";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["500", "700"],
-  variable: "--font-montserrat",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Antenas de Ouro",
-  description: "Sistema de gerenciamento de turmas e frequência",
+  description: "Sistema de Frequência Escolar",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="pt-BR" className={`${montserrat.variable} ${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#FDFBF7] text-[#4F5D75] font-sans">
+    <html lang="pt-BR">
+      <body className={`${montserrat.className} antialiased min-h-screen`}>
         {children}
+        <ThemeToggle />
       </body>
     </html>
   );

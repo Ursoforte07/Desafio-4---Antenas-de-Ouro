@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Painel from "@/app/components/Painel";
+import GraficoPizza from "@/app/components/GraficoPizza";
 
 type PresencaItem = {
   id: number;
@@ -56,7 +57,6 @@ function ConteudoDetalhesAluno() {
   const aulasFaltadas = totalAulas - aulasPresentes;
   const pctPresente =
     totalAulas > 0 ? Math.round((aulasPresentes / totalAulas) * 100) : 100;
-  const pctFalta = 100 - pctPresente;
 
   const corStatus =
     pctPresente >= 85
@@ -108,36 +108,13 @@ function ConteudoDetalhesAluno() {
         </div>
 
         <div className="w-full bg-white border border-[#4F5D75]/60 rounded-2xl p-6 md:p-8 shadow-sm grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-          <div className="flex items-center justify-center gap-6">
-            <div
-              className="w-44 h-44 rounded-full relative flex items-center justify-center"
-              style={{
-                background: `conic-gradient(#2D3142 0% ${pctFalta}%, #4F5D75 ${pctFalta}% 100%)`,
-              }}
-            >
-              {pctFalta > 0 && (
-                <span className="absolute top-6 right-7 text-white text-xs font-bold">
-                  {pctFalta}%
-                </span>
-              )}
-              <span className="text-white text-base font-bold">
-                {pctPresente}%
-              </span>
-            </div>
+          <GraficoPizza
+            percentualPresentes={pctPresente}
+            labelFaltosos="FALTAS"
+            labelPresentes="PRESENÇAS"
+          />
 
-            <div className="flex flex-col gap-3 text-sm font-medium text-[#4F5D75] uppercase">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#2D3142]" />
-                <span>FALTAS</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#4F5D75]" />
-                <span>PRESENÇAS</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4 text-lg text-[#4F5D75] normal-case">
+          <div className="flex flex-col gap-4 text-lg text-[#4F5D75] normal-case md:pl-6">
             <p>
               Aulas presentes:{" "}
               <span className="font-semibold">{aulasPresentes}</span>

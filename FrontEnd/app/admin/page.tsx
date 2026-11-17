@@ -14,14 +14,12 @@ export default function AdminPage() {
   const router = useRouter();
   const [usuarios, setUsuarios] = useState<UsuarioItem[]>([]);
 
-  // Estados do formulário de criação
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [role, setRole] = useState("PROFESSOR");
 
-  // Estados do modal de edição
   const [usuarioEditando, setUsuarioEditando] = useState<UsuarioItem | null>(null);
   const [editNome, setEditNome] = useState("");
   const [editEmail, setEditEmail] = useState("");
@@ -93,7 +91,6 @@ export default function AdminPage() {
       return;
     }
 
-    // Se o próprio admin editou seu perfil, atualiza o localStorage
     const logado = JSON.parse(localStorage.getItem("usuarioLogado") || "null");
     if (logado && logado.id === usuarioEditando.id) {
       localStorage.setItem("usuarioLogado", JSON.stringify(data));
@@ -122,7 +119,6 @@ export default function AdminPage() {
       </header>
 
       <main className="w-full max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Formulário de Cadastro */}
         <form
           onSubmit={handleCriar}
           className="bg-white border border-[#4F5D75]/50 rounded-2xl p-6 flex flex-col gap-4 normal-case shadow-sm h-fit"
@@ -191,7 +187,6 @@ export default function AdminPage() {
           </button>
         </form>
 
-        {/* Lista de Usuários com Botão Editar */}
         <div className="bg-white border border-[#4F5D75]/50 rounded-2xl p-6 shadow-sm">
           <h2 className="text-xl font-bold uppercase text-[#2D3142] mb-4">
             USUÁRIOS CADASTRADOS
@@ -205,16 +200,20 @@ export default function AdminPage() {
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-xs font-bold uppercase px-3 py-1 rounded-full bg-[#E1D8CE] text-[#2D3142]">
+                  <span className="badge-cargo text-xs font-bold uppercase px-3 py-1 rounded-full bg-[#E1D8CE] text-[#2D3142]">
                     {u.role}
                   </span>
                   <button
                     type="button"
                     onClick={() => abrirModalEdicao(u)}
                     title="Editar login e senha"
-                    className="p-1.5 rounded-lg hover:bg-[#E1D8CE]/60 transition-colors cursor-pointer"
+                    className="p-2 rounded-lg hover:bg-[#E1D8CE]/40 transition-colors cursor-pointer"
                   >
-                    <img src="/lapis.png" alt="Editar usuário" className="w-5 h-5" />
+                    <img
+                      src="/lapis.png"
+                      alt="Editar usuário"
+                      className="icone-lapis w-5 h-5"
+                    />
                   </button>
                 </div>
               </div>
@@ -223,7 +222,6 @@ export default function AdminPage() {
         </div>
       </main>
 
-      {/* Modal de Edição de Usuário (Login, Nome, Perfil e Senha) */}
       {usuarioEditando && (
         <div
           onClick={() => setUsuarioEditando(null)}

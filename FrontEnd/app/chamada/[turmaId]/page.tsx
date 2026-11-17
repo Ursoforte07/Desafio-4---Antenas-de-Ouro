@@ -77,20 +77,17 @@ function ConteudoChamada() {
       return;
     }
 
-    // Volta para a página de turmas após salvar com sucesso
     router.push("/turmas");
   };
 
   return (
     <Painel titulo={`${nomeTurma} - ${dataFormatada}`}>
       <div className="w-full max-w-6xl mx-auto flex flex-col border border-[#4F5D75]/60 bg-white overflow-hidden shadow-sm">
-        {/* Cabeçalho da Tabela */}
         <div className="grid grid-cols-12 bg-[#2D3142] text-white font-semibold uppercase text-lg md:text-xl py-4 px-6 shrink-0">
           <div className="col-span-9 text-center">NOME</div>
           <div className="col-span-3 text-center">PRESENÇA</div>
         </div>
 
-        {/* Lista de Alunos com fonte ampliada e bem proporcionada */}
         <div className="max-h-[65vh] overflow-y-auto divide-y divide-[#4F5D75]/40">
           {presencas.map((item) => (
             <div
@@ -124,7 +121,6 @@ function ConteudoChamada() {
           )}
         </div>
 
-        {/* Rodapé com botão SALVAR */}
         <div className="border-t border-[#4F5D75]/40 px-6 py-4 flex justify-end bg-white shrink-0">
           <button
             type="button"

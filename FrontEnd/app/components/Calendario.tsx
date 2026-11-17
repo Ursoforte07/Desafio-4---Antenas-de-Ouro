@@ -17,7 +17,6 @@ export default function Calendario() {
   const [turmas, setTurmas] = useState<{ id: number; nome: string }[]>([]);
   const [turmaEscolhida, setTurmaEscolhida] = useState<string>("");
 
-  // Gera dinamicamente uma janela de anos ao redor do ano atualmente selecionado (-5 até +10 anos)
   const anosDisponiveis = useMemo(() => {
     const inicio = Math.min(2024, ano - 5);
     const fim = ano + 10;
@@ -148,7 +147,7 @@ export default function Calendario() {
               onClick={() => item.mesAtual && abrirSelecaoTurma(item.dia)}
               className={`h-20 md:h-24 border-t border-r border-gray-300 flex items-center justify-center text-lg transition-colors last:border-r-0 ${
                 !item.mesAtual
-                  ? "bg-[#FDFBF7] text-[#4F5D75]/40 cursor-default"
+                  ? "celula-fora-mes bg-[#FDFBF7] text-[#4F5D75]/40 cursor-default"
                   : "bg-white text-[#4F5D75] hover:bg-[#E1D8CE] cursor-pointer font-medium"
               }`}
             >

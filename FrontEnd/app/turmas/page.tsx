@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Painel from "@/app/components/Painel";
 import ModalConfirmacao from "@/app/components/ModalConfirmacao";
+import GraficoPizza from "@/app/components/GraficoPizza";
 
 type TurmaItem = {
   id: number;
@@ -86,71 +87,43 @@ export default function PaginaTurmas() {
         </div>
 
         <div className="w-full flex flex-col gap-8">
-          {turmas.map((turma) => {
-            const pctFalta = 100 - turma.percentualPresentes;
+          {turmas.map((turma) => (
+            <div key={turma.id} className="w-full flex flex-col">
+              <div className="w-full flex items-center justify-between mb-2 px-1">
+                <Link
+                  href={`/alunos?turmaId=${turma.id}`}
+                  className="text-xl md:text-2xl font-medium uppercase text-[#4F5D75] hover:text-[#D4AF37] transition-colors"
+                >
+                  {turma.nome}
+                </Link>
 
-            return (
-              <div key={turma.id} className="w-full flex flex-col">
-                <div className="w-full flex items-center justify-between mb-2 px-1">
-                  {/* Ao clicar no nome da turma, abre a página de Alunos já filtrada para esta turma */}
-                  <Link
-                    href={`/alunos?turmaId=${turma.id}`}
-                    className="text-xl md:text-2xl font-medium uppercase text-[#4F5D75] hover:text-[#D4AF37] transition-colors"
-                  >
-                    {turma.nome}
-                  </Link>
+                <button
+                  type="button"
+                  onClick={() => setTurmaExcluir(turma)}
+                  className="flex items-center gap-2 text-red-500 hover:text-red-700 text-sm font-medium uppercase cursor-pointer"
+                >
+                  <span>EXCLUIR TURMA</span>
+                  <img src="/trash.png" alt="Excluir" className="w-5 h-5" />
+                </button>
+              </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setTurmaExcluir(turma)}
-                    className="flex items-center gap-2 text-red-500 hover:text-red-700 text-sm font-medium uppercase cursor-pointer"
-                  >
-                    <span>EXCLUIR TURMA</span>
-                    <img src="/trash.png" alt="Excluir" className="w-5 h-5" />
-                  </button>
-                </div>
+              <div className="w-full bg-white border border-[#4F5D75]/60 rounded-2xl p-6 md:p-8 shadow-sm">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center gap-6">
+                  <GraficoPizza
+                    percentualPresentes={turma.percentualPresentes}
+                    labelFaltosos="Faltosos"
+                    labelPresentes="Presentes"
+                  />
 
-                <div className="w-full bg-white border border-[#4F5D75]/60 rounded-2xl p-6 md:p-10 shadow-sm">
-                  <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-                    <div className="flex items-center justify-center gap-6">
-                      <div
-                        className="w-44 h-44 md:w-52 md:h-52 rounded-full relative flex items-center justify-center"
-                        style={{
-                          background: `conic-gradient(#2D3142 0% ${pctFalta}%, #4F5D75 ${pctFalta}% 100%)`,
-                        }}
-                      >
-                        {pctFalta > 0 && (
-                          <span className="absolute top-6 right-8 text-white text-xs font-semibold">
-                            {pctFalta}%
-                          </span>
-                        )}
-                        <span className="text-white text-base font-semibold">
-                          {turma.percentualPresentes}%
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col gap-4 text-base text-[#4F5D75] font-medium normal-case">
-                        <div className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-[#2D3142]" />
-                          <span>Faltosos</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-[#4F5D75]" />
-                          <span>Presentes</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-5 text-[#4F5D75] text-lg md:text-xl normal-case md:pl-8">
-                      <p>Total de alunos: <strong>{turma.totalAlunos}</strong></p>
-                      <p>Aulas cadastradas: <strong>{turma.aulasCadastradas}</strong></p>
-                      <p>Baixa frequência: <strong>{turma.baixaFrequencia}</strong></p>
-                    </div>
+                  <div className="flex flex-col gap-5 text-[#4F5D75] text-lg md:text-xl normal-case md:pl-8">
+                    <p>Total de alunos: <strong>{turma.totalAlunos}</strong></p>
+                    <p>Aulas cadastradas: <strong>{turma.aulasCadastradas}</strong></p>
+                    <p>Baixa frequência: <strong>{turma.baixaFrequencia}</strong></p>
                   </div>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
 
           {turmas.length === 0 && (
             <p className="text-[#4F5D75] text-base normal-case">

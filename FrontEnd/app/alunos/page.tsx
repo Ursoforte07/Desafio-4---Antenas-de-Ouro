@@ -26,13 +26,11 @@ function ConteudoPaginaAlunos() {
   const [turmas, setTurmas] = useState<{ id: number; nome: string }[]>([]);
   const [busca, setBusca] = useState("");
 
-  // Estados dos filtros das setinhas STATUS ▼ e TURMA ▼
   const [filtroTurma, setFiltroTurma] = useState<string>(turmaIdUrl || "TODAS");
   const [filtroStatus, setFiltroStatus] = useState<FiltroStatus>("TODOS");
   const [ordemStatus, setOrdemStatus] = useState<OrdemStatus>("NENHUMA");
   const [menuAberto, setMenuAberto] = useState<"STATUS" | "TURMA" | null>(null);
 
-  // Estados de criação e exclusão
   const [modalCriar, setModalCriar] = useState(false);
   const [novoNome, setNovoNome] = useState("");
   const [turmaSelecionada, setTurmaSelecionada] = useState("");
@@ -40,12 +38,10 @@ function ConteudoPaginaAlunos() {
 
   const cabecalhoRef = useRef<HTMLDivElement>(null);
 
-  // Sincroniza caso o parâmetro ?turmaId mude na URL
   useEffect(() => {
     setFiltroTurma(turmaIdUrl || "TODAS");
   }, [turmaIdUrl]);
 
-  // Fecha dropdown ao clicar fora do cabeçalho
   useEffect(() => {
     const handleClickFora = (e: MouseEvent) => {
       if (cabecalhoRef.current && !cabecalhoRef.current.contains(e.target as Node)) {
@@ -74,7 +70,6 @@ function ConteudoPaginaAlunos() {
     carregarDados();
   }, []);
 
-  // Aplica busca por nome, filtro de turma, filtro de status e ordenação
   const alunosFiltrados = useMemo(() => {
     let lista = alunos.filter((al) =>
       al.nome.toLowerCase().includes(busca.toLowerCase())
@@ -154,7 +149,6 @@ function ConteudoPaginaAlunos() {
   return (
     <Painel titulo={nomeTurmaFiltrada ? `ALUNOS - ${nomeTurmaFiltrada}` : "ALUNOS"}>
       <div className="w-full h-[calc(100vh-140px)] flex flex-col">
-        {/* Barra superior: Busca, Badge de Filtro Ativo e Adicionar Aluno */}
         <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-5 shrink-0">
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             <div className="relative w-full sm:w-96">
@@ -172,7 +166,6 @@ function ConteudoPaginaAlunos() {
               />
             </div>
 
-            {/* Tag indicando filtro ativo com opção rápida de limpar */}
             {(filtroTurma !== "TODAS" || filtroStatus !== "TODOS" || ordemStatus !== "NENHUMA") && (
               <button
                 type="button"
@@ -181,7 +174,7 @@ function ConteudoPaginaAlunos() {
                   setFiltroStatus("TODOS");
                   setOrdemStatus("NENHUMA");
                 }}
-                className="px-3.5 py-1.5 rounded-full bg-[#E1D8CE] text-[#2D3142] text-xs font-semibold uppercase flex items-center gap-2 hover:opacity-80 cursor-pointer"
+                className="badge-cargo px-3.5 py-1.5 rounded-full bg-[#E1D8CE] text-[#2D3142] text-xs font-semibold uppercase flex items-center gap-2 hover:opacity-80 cursor-pointer"
               >
                 <span>LIMPAR FILTROS</span>
                 <span>✕</span>
@@ -199,9 +192,7 @@ function ConteudoPaginaAlunos() {
           </button>
         </div>
 
-        {/* Quadro da Tabela */}
         <div className="w-full flex-1 flex flex-col border border-[#4F5D75]/60 bg-white overflow-visible shadow-sm">
-          {/* Cabeçalho com Dropdowns interativos em STATUS ▼ e TURMA ▼ */}
           <div
             ref={cabecalhoRef}
             className="grid grid-cols-12 bg-[#2D3142] text-white font-semibold uppercase text-lg py-3.5 px-6 shrink-0 relative select-none"
@@ -222,8 +213,8 @@ function ConteudoPaginaAlunos() {
               </button>
 
               {menuAberto === "STATUS" && (
-                <div className="absolute top-11 z-40 w-56 bg-[#FDFBF7] border border-[#4F5D75] rounded-xl shadow-xl py-2 text-sm text-[#4F5D75] font-medium normal-case">
-                  <p className="px-4 py-1 text-xs font-bold uppercase text-[#2D3142]/60">
+                <div className="menu-dropdown absolute top-11 z-40 w-56 rounded-xl shadow-xl py-2 text-sm font-medium normal-case">
+                  <p className="menu-dropdown-titulo px-4 py-1 text-xs font-bold uppercase">
                     Filtrar por faixa
                   </p>
                   <button
@@ -232,8 +223,8 @@ function ConteudoPaginaAlunos() {
                       setFiltroStatus("TODOS");
                       setMenuAberto(null);
                     }}
-                    className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] cursor-pointer ${
-                      filtroStatus === "TODOS" ? "font-bold text-[#2D3142] bg-[#E1D8CE]/40" : ""
+                    className={`menu-dropdown-item w-full text-left px-4 py-2 cursor-pointer ${
+                      filtroStatus === "TODOS" ? "menu-dropdown-ativo" : ""
                     }`}
                   >
                     Todos os status
@@ -244,8 +235,8 @@ function ConteudoPaginaAlunos() {
                       setFiltroStatus("ALTA");
                       setMenuAberto(null);
                     }}
-                    className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] text-green-700 cursor-pointer ${
-                      filtroStatus === "ALTA" ? "font-bold bg-[#E1D8CE]/40" : ""
+                    className={`menu-dropdown-item status-alta w-full text-left px-4 py-2 text-green-700 cursor-pointer ${
+                      filtroStatus === "ALTA" ? "menu-dropdown-ativo" : ""
                     }`}
                   >
                     Alta (85% a 100%)
@@ -256,8 +247,8 @@ function ConteudoPaginaAlunos() {
                       setFiltroStatus("MEDIA");
                       setMenuAberto(null);
                     }}
-                    className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] text-[#D4AF37] cursor-pointer ${
-                      filtroStatus === "MEDIA" ? "font-bold bg-[#E1D8CE]/40" : ""
+                    className={`menu-dropdown-item status-media w-full text-left px-4 py-2 text-[#D4AF37] cursor-pointer ${
+                      filtroStatus === "MEDIA" ? "menu-dropdown-ativo" : ""
                     }`}
                   >
                     Média (75% a 84%)
@@ -268,15 +259,15 @@ function ConteudoPaginaAlunos() {
                       setFiltroStatus("BAIXA");
                       setMenuAberto(null);
                     }}
-                    className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] text-red-600 cursor-pointer ${
-                      filtroStatus === "BAIXA" ? "font-bold bg-[#E1D8CE]/40" : ""
+                    className={`menu-dropdown-item status-baixa w-full text-left px-4 py-2 text-red-600 cursor-pointer ${
+                      filtroStatus === "BAIXA" ? "menu-dropdown-ativo" : ""
                     }`}
                   >
                     Baixa frequência (&lt; 75%)
                   </button>
 
                   <div className="my-1 border-t border-gray-300" />
-                  <p className="px-4 py-1 text-xs font-bold uppercase text-[#2D3142]/60">
+                  <p className="menu-dropdown-titulo px-4 py-1 text-xs font-bold uppercase">
                     Ordenar
                   </p>
                   <button
@@ -285,8 +276,8 @@ function ConteudoPaginaAlunos() {
                       setOrdemStatus("DESC");
                       setMenuAberto(null);
                     }}
-                    className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] cursor-pointer ${
-                      ordemStatus === "DESC" ? "font-bold text-[#2D3142] bg-[#E1D8CE]/40" : ""
+                    className={`menu-dropdown-item w-full text-left px-4 py-2 cursor-pointer ${
+                      ordemStatus === "DESC" ? "menu-dropdown-ativo" : ""
                     }`}
                   >
                     Maior presença primeiro
@@ -297,8 +288,8 @@ function ConteudoPaginaAlunos() {
                       setOrdemStatus("ASC");
                       setMenuAberto(null);
                     }}
-                    className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] cursor-pointer ${
-                      ordemStatus === "ASC" ? "font-bold text-[#2D3142] bg-[#E1D8CE]/40" : ""
+                    className={`menu-dropdown-item w-full text-left px-4 py-2 cursor-pointer ${
+                      ordemStatus === "ASC" ? "menu-dropdown-ativo" : ""
                     }`}
                   >
                     Menor presença primeiro
@@ -321,15 +312,15 @@ function ConteudoPaginaAlunos() {
               </button>
 
               {menuAberto === "TURMA" && (
-                <div className="absolute right-0 top-11 z-40 w-48 bg-[#FDFBF7] border border-[#4F5D75] rounded-xl shadow-xl py-2 text-sm text-[#4F5D75] font-medium uppercase">
+                <div className="menu-dropdown absolute right-0 top-11 z-40 w-48 rounded-xl shadow-xl py-2 text-sm font-medium uppercase">
                   <button
                     type="button"
                     onClick={() => {
                       limparFiltroTurma();
                       setMenuAberto(null);
                     }}
-                    className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] cursor-pointer ${
-                      filtroTurma === "TODAS" ? "font-bold text-[#2D3142] bg-[#E1D8CE]/40" : ""
+                    className={`menu-dropdown-item w-full text-left px-4 py-2 cursor-pointer ${
+                      filtroTurma === "TODAS" ? "menu-dropdown-ativo" : ""
                     }`}
                   >
                     TODAS AS TURMAS
@@ -342,10 +333,8 @@ function ConteudoPaginaAlunos() {
                         setFiltroTurma(String(t.id));
                         setMenuAberto(null);
                       }}
-                      className={`w-full text-left px-4 py-2 hover:bg-[#E1D8CE] cursor-pointer ${
-                        filtroTurma === String(t.id)
-                          ? "font-bold text-[#2D3142] bg-[#E1D8CE]/40"
-                          : ""
+                      className={`menu-dropdown-item w-full text-left px-4 py-2 cursor-pointer ${
+                        filtroTurma === String(t.id) ? "menu-dropdown-ativo" : ""
                       }`}
                     >
                       {t.nome}
@@ -356,7 +345,6 @@ function ConteudoPaginaAlunos() {
             </div>
           </div>
 
-          {/* Lista de Alunos Filtrados */}
           <div className="flex-1 overflow-y-auto divide-y divide-[#4F5D75]/40">
             {alunosFiltrados.map((aluno) => (
               <div
