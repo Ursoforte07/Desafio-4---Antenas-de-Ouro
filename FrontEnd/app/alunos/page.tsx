@@ -197,7 +197,7 @@ function ConteudoPaginaAlunos() {
         <div className="w-full flex-1 flex flex-col border border-[#4F5D75]/60 bg-white overflow-visible shadow-sm">
           <div
             ref={cabecalhoRef}
-            className="grid grid-cols-12 bg-[#2D3142] text-white font-semibold uppercase text-xs sm:text-sm md:text-lg py-3 md:py-3.5 px-2.5 sm:px-4 md:px-6 shrink-0 relative select-none"
+            className="grid grid-cols-12 bg-[#2D3142] text-white font-semibold uppercase text-[10px] sm:text-sm md:text-lg py-2.5 sm:py-3 md:py-3.5 px-1.5 sm:px-4 md:px-6 shrink-0 relative select-none"
           >
             <div className="col-span-6 md:col-span-7 text-center">NOME</div>
 
@@ -208,14 +208,14 @@ function ConteudoPaginaAlunos() {
                 onClick={() =>
                   setMenuAberto((prev) => (prev === "STATUS" ? null : "STATUS"))
                 }
-                className="flex items-center gap-1 md:gap-2 hover:text-[#E1D8CE] transition-colors cursor-pointer"
+                className="flex items-center gap-0.5 sm:gap-1.5 md:gap-2 hover:text-[#E1D8CE] transition-colors cursor-pointer"
               >
                 <span>STATUS</span>
-                <span className="text-[10px] md:text-xs">▼</span>
+                <span className="text-[8px] sm:text-xs">▼</span>
               </button>
 
               {menuAberto === "STATUS" && (
-                <div className="menu-dropdown absolute left-1/2 -translate-x-1/2 top-9 md:top-11 z-40 w-52 sm:w-56 rounded-xl shadow-xl py-2 text-xs sm:text-sm font-medium normal-case">
+                <div className="menu-dropdown absolute left-1/2 -translate-x-1/2 top-8 sm:top-10 md:top-11 z-40 w-52 sm:w-56 rounded-xl shadow-xl py-2 text-xs sm:text-sm font-medium normal-case">
                   <p className="menu-dropdown-titulo px-4 py-1 text-xs font-bold uppercase">
                     Filtrar por faixa
                   </p>
@@ -307,14 +307,14 @@ function ConteudoPaginaAlunos() {
                 onClick={() =>
                   setMenuAberto((prev) => (prev === "TURMA" ? null : "TURMA"))
                 }
-                className="flex items-center gap-1 md:gap-2 hover:text-[#E1D8CE] transition-colors cursor-pointer"
+                className="flex items-center gap-0.5 sm:gap-1.5 md:gap-2 hover:text-[#E1D8CE] transition-colors cursor-pointer"
               >
                 <span>TURMA</span>
-                <span className="text-[10px] md:text-xs">▼</span>
+                <span className="text-[8px] sm:text-xs">▼</span>
               </button>
 
               {menuAberto === "TURMA" && (
-                <div className="menu-dropdown absolute right-0 top-9 md:top-11 z-40 w-44 sm:w-48 rounded-xl shadow-xl py-2 text-xs sm:text-sm font-medium uppercase">
+                <div className="menu-dropdown absolute right-0 top-8 sm:top-10 md:top-11 z-40 w-44 sm:w-48 rounded-xl shadow-xl py-2 text-xs sm:text-sm font-medium uppercase">
                   <button
                     type="button"
                     onClick={() => {
@@ -353,10 +353,10 @@ function ConteudoPaginaAlunos() {
                 key={aluno.id}
                 className="grid grid-cols-12 items-center bg-white hover:bg-[#FDFBF7]"
               >
-                <div className="col-span-6 md:col-span-7 flex items-center justify-between px-2.5 sm:px-4 md:px-6 py-3.5 md:py-4 border-r border-[#4F5D75]/40 min-w-0">
+                <div className="col-span-6 md:col-span-7 flex items-center justify-between px-2 sm:px-4 md:px-6 py-3 sm:py-3.5 md:py-4 border-r border-[#4F5D75]/40 min-w-0">
                   <Link
                     href={`/alunos/${aluno.id}`}
-                    className="text-[#4F5D75] hover:text-[#D4AF37] uppercase text-xs sm:text-sm md:text-base truncate pr-2 md:pr-4"
+                    className="text-[#4F5D75] hover:text-[#D4AF37] uppercase text-[11px] sm:text-sm md:text-base truncate pr-1.5 md:pr-4"
                   >
                     {aluno.nome}
                   </Link>
@@ -365,19 +365,19 @@ function ConteudoPaginaAlunos() {
                     onClick={() => setAlunoExcluir(aluno)}
                     className="cursor-pointer hover:scale-110 shrink-0"
                   >
-                    <img src="/trash.png" alt="Excluir" className="w-4 h-4 md:w-5 md:h-5" />
+                    <img src="/trash.png" alt="Excluir" className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                   </button>
                 </div>
 
                 <div
-                  className={`col-span-3 py-3.5 md:py-4 text-center font-medium text-base sm:text-lg md:text-xl border-r border-[#4F5D75]/40 ${getCorStatus(
+                  className={`col-span-3 py-3 sm:py-3.5 md:py-4 text-center font-medium text-sm sm:text-lg md:text-xl border-r border-[#4F5D75]/40 ${getCorStatus(
                     aluno.frequencia
                   )}`}
                 >
                   {aluno.frequencia}%
                 </div>
 
-                <div className="col-span-3 md:col-span-2 py-3.5 md:py-4 px-1 md:px-2 text-center text-[#4F5D75] text-xs sm:text-sm md:text-lg truncate">
+                <div className="col-span-3 md:col-span-2 py-3 sm:py-3.5 md:py-4 px-1 md:px-2 text-center text-[#4F5D75] text-[11px] sm:text-sm md:text-lg truncate">
                   {aluno.turmaNome}
                 </div>
               </div>
