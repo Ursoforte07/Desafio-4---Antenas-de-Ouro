@@ -26,8 +26,12 @@ export default function Painel({ titulo, subtitulo, children }: PainelProps) {
       <Header titulo={titulo} subtitulo={subtitulo} />
 
       <div className="relative flex flex-1 flex-col md:flex-row">
-        <Sidebar />
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main className="order-1 md:order-2 flex-1 p-4 md:p-6">
+          {children}
+        </main>
+        <div className="order-2 md:order-1 shrink-0">
+          <Sidebar />
+        </div>
       </div>
     </div>
   );

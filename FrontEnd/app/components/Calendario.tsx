@@ -89,7 +89,7 @@ export default function Calendario() {
 
   return (
     <div className="w-full text-[#4F5D75]">
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
         <button
           type="button"
           onClick={voltarMes}
@@ -102,7 +102,7 @@ export default function Calendario() {
         <select
           value={mes}
           onChange={(e) => setMes(Number(e.target.value))}
-          className="bg-white text-[#4F5D75] border border-gray-300 rounded-md px-3 py-1.5 text-sm font-medium uppercase"
+          className="bg-white text-[#4F5D75] border border-gray-300 rounded-md px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium uppercase"
         >
           {MESES.map((nomeMes, index) => (
             <option key={nomeMes} value={index}>{nomeMes}</option>
@@ -112,7 +112,7 @@ export default function Calendario() {
         <select
           value={ano}
           onChange={(e) => setAno(Number(e.target.value))}
-          className="bg-white text-[#4F5D75] border border-gray-300 rounded-md px-3 py-1.5 text-sm font-medium"
+          className="bg-white text-[#4F5D75] border border-gray-300 rounded-md px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm font-medium"
         >
           {anosDisponiveis.map((a) => (
             <option key={a} value={a}>{a}</option>
@@ -132,8 +132,9 @@ export default function Calendario() {
       <div className="w-full overflow-hidden rounded-xl border border-gray-400 bg-white shadow-sm">
         <div className="grid grid-cols-7 bg-[#2D3142] text-white">
           {DIAS_SEMANA.map((dia) => (
-            <div key={dia} className="py-3 text-center text-xs md:text-sm font-semibold uppercase">
-              {dia}
+            <div key={dia} className="py-2.5 md:py-3 text-center text-xs md:text-sm font-semibold uppercase">
+              <span className="md:hidden">{dia.slice(0, 3)}</span>
+              <span className="hidden md:inline">{dia}</span>
             </div>
           ))}
         </div>
@@ -145,7 +146,7 @@ export default function Calendario() {
               type="button"
               disabled={!item.mesAtual}
               onClick={() => item.mesAtual && abrirSelecaoTurma(item.dia)}
-              className={`h-20 md:h-24 border-t border-r border-gray-300 flex items-center justify-center text-lg transition-colors last:border-r-0 ${
+              className={`h-14 sm:h-18 md:h-24 border-t border-r border-gray-300 flex items-center justify-center text-base md:text-lg transition-colors last:border-r-0 ${
                 !item.mesAtual
                   ? "celula-fora-mes bg-[#FDFBF7] text-[#4F5D75]/40 cursor-default"
                   : "bg-white text-[#4F5D75] hover:bg-[#E1D8CE] cursor-pointer font-medium"
