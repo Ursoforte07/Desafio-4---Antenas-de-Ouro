@@ -1,73 +1,157 @@
-# Desafio-4---Antenas-de-Ouro
+# 📡 Antenas de Ouro — Sistema de Gestão de Presença Acadêmica
 
-## 1. Sobre o projeto
+Plataforma web full-stack desenvolvida para modernizar e automatizar o controle de frequência em aulas práticas e laboratoriais, substituindo listas em papel por um fluxo digital centralizado, seguro e responsivo.
 
-Esta é uma plataforma web desenvolvida para auxiliar professores na gestão de frequência de aulas práticas e laboratoriais.
+Projeto desenvolvido no contexto de consultoria e engenharia de software para a **EngNet**, cobrindo desde o levantamento de requisitos e modelagem de dados até o deploy em produção.
 
-O sistema busca substituir os registros manuais em papel por um processo digital, facilitando o controle de presença e a consulta de informações.
+---
 
+## 📋 1. Problema Identificado e Solução
 
-## 2. Problema identificado
+O controle manual de presença em ambientes laboratoriais gera gargalos operacionais e administrativos. A tabela abaixo resume como a plataforma resolve cada ponto levantado:
 
-O processo manual de registro de frequência pode gerar problemas como:
-- Alunos assinando presença por colegas.
-- Erros no lançamento de frequências.
-- Dificuldade de acompanhar o histórico de presença.
-- Desperdício de papel.
-- Demora na geração de relatórios.
-- Sobrecarga de trabalho para os professores.
+| Problema no Processo Manual | Solução Implementada no Sistema |
+| :--- | :--- |
+| Assinatura de presença por terceiros e erros de lançamento | Chamada digital autenticada, vinculada individualmente ao professor responsável |
+| Desperdício de papel e acúmulo de fichas físicas | Registros armazenados em banco de dados relacional (PostgreSQL) |
+| Demora para calcular faltas e gerar relatórios | Cálculo automático em tempo real do percentual de frequência por aluno |
+| Dificuldade em identificar alunos em risco de reprovação | Alertas automáticos para frequência inferior a **75%** e classificação visual por faixa |
+| Falta de histórico organizado por data e horário | Registro individual de cada aula com data, horário e possibilidade de edição posterior |
 
-## 3. Objetivo
+---
 
-Desenvolver um sistema que facilite o registro e o acompanhamento da frequência dos alunos, reduza erros e permita a geração rápida de relatórios.
+## 👥 2. Perfis de Usuário e Regras de Negócio
 
+### Perfis do Sistema
+* **Administrador (`ADMIN`):** Gerencia os acessos da plataforma, podendo cadastrar, visualizar e remover contas de Professores e outros Administradores.
+* **Professor (`PROFESSOR`):** Possui acesso exclusivo às suas próprias turmas, alunos e registros de chamada.
+* **Aluno:** Entidade acadêmica vinculada a uma turma para acompanhamento de frequência (não possui login na plataforma).
 
-## 4. Usuários do sistema
+### Regras de Negócio
+1. **Isolamento de Dados:** Cada professor visualiza e gerencia apenas as turmas criadas em sua conta.
+2. **Registro Único de Aula:** Cada chamada gera um registro de aula vinculado à turma, data e horário. Caso uma chamada seja aberta novamente na mesma data, o sistema carrega os dados existentes para edição.
+3. **Edição Retroativa:** O professor pode consultar e corrigir presenças ou faltas de aulas já encerradas.
+4. **Cálculo Automático de Frequência:** O percentual de presença de cada aluno é calculado dinamicamente com base no total de aulas ministradas na turma:
+   * **Alta Frequência (`85%` a `100%`):** Indicador em verde.
+   * **Frequência Média (`75%` a `84%`):** Indicador em dourado/amarelo.
+   * **Baixa Frequência (`< 75%`):** Indicador em vermelho e contabilizado no alerta do painel.
 
-- **Professores:** podem criar suas próprias contas, realizar login e gerenciar turmas e frequências.
-- **Alunos:** são cadastrados como registros, mas não possuem acesso à plataforma.
+---
 
-Cada professor terá acesso exclusivo às turmas sob sua responsabilidade.
+## ✨ 3. Funcionalidades e Diferenciais
 
-## 5. Regras de negócio
+### Funcionalidades Principais
+* **Autenticação e Controle de Rotas:** Login com redirecionamento automático por perfil (`/admin` para administradores e `/` para professores).
+* **Dashboard e Calendário Interativo:**
+  * Indicadores em tempo real: *Total de Alunos*, *Aulas Cadastradas*, *Presença Média* e *Alunos com Baixa Frequência*.
+  * Calendário mensal interativo que permite clicar em qualquer dia e iniciar diretamente a chamada da turma escolhida.
+* **Gerenciamento de Turmas (`/turmas`):** Criação, edição, exclusão e visualização de turmas contendo **Nome**, **Código**, **Horário** e **Quantidade de Alunos**.
+* **Gestão de Alunos (`/alunos`):** Cadastro vinculado à turma, exclusão e consulta rápida.
+* **Controle Digital de Frequência (`/chamada/[turmaId]`):** Seleção de data e horário, alternância rápida entre **Presente** e **Falta**, contador resumido da aula e salvamento persistente.
+* **Relatório Individual (`/alunos/[id]`):** Histórico completo de presença aula a aula, percentual geral e situação acadêmica.
 
-- Cada professor pode criar sua própria conta.
-- Cada professor possui acesso exclusivo às suas turmas.
-- O professor pode criar, editar e excluir suas próprias turmas.
-- O professor pode cadastrar, editar e remover alunos de suas turmas.
-- O professor pode registrar e corrigir as frequências dos alunos.
-- Os alunos não possuem contas ou acesso à plataforma
-- Cada chamada deve gerar um registro individual de aula, contendo data e horário.
-- A frequência dos alunos deve estar vinculada a uma aula específica.
-- O professor pode consultar o histórico de aulas e suas respectivas frequências.
-- O professor pode alterar os registros de frequência mesmo após o encerramento da chamada.
-- O sistema calcula automaticamente o percentual de frequência de cada aluno com base nas aulas registradas.
-- O sistema deve identificar alunos com frequência inferior a 75%.
-- Alunos abaixo desse limite devem aparecer como alertas no dashboard.
+### Diferenciais Implementados
+* **🌓 Dark Mode Global:** Alternância entre tema claro e escuro via botão flutuante, com suporte completo em tabelas, modais, calendário, menus suspensos e gráficos.
+* **📊 Gráficos Dinâmicos em SVG:** Gráfico de pizza interativo na página individual do aluno exibindo a proporção entre presenças e faltas.
+* **🔍 Busca, Filtros e Ordenação:** Pesquisa instantânea por nome, filtro por turma, filtro por faixa de frequência (Alta, Média, Baixa) e ordenação crescente/decrescente.
+* **📱 Responsividade Mobile-First:** Adaptação completa para **Desktop, Tablet e Smartphone**, priorizando a área de interação no topo da tela em dispositivos móveis.
 
-## 6. Funcionalidades principais
+---
 
-- **Dashboard:** indicadores gerais e alertas de baixa frequência.
-- **Gerenciamento de turmas:** criação, edição, remoção e visualização de turmas e alunos.
-- **Registro de frequência:** marcação de presença e falta durante as aulas.
-- **Relatórios:** consulta de frequência individual, percentual de presença e histórico por turma.
-- **Autenticação:** acesso restrito aos professores.
+## 🛠️ 4. Tecnologias Utilizadas
 
-## 7. Tecnologias usadas
+* **Front-end:** Next.js 16 (App Router & Turbopack), React, TypeScript, Tailwind CSS v4.
+* **Back-end / API:** Next.js API Routes (Arquitetura RESTful em `/api/auth` e `/api/dados`).
+* **Banco de Dados:** PostgreSQL (hospedado em nuvem via **Neon**).
+* **Hospedagem e Deploy:** Vercel.
+* **Versionamento:** Git e GitHub.
 
-- Front-end: Next.js, TypeScript e Tailwind CSS.
-- Back-end: NestJS.
-- Banco de dados: PostgreSQL.
-- Versionamento: Git e GitHub.
+---
 
-## 8. Prototipagem
+## 🚀 5. Guia de Utilização (Passo a Passo)
 
-A interface do sistema foi planejada e prototipada no Figma.
+Para testar todas as funcionalidades da plataforma (tanto no link publicado na Vercel quanto localmente), siga o fluxo abaixo:
 
-## 9. Equipe
+### Passo 1: Acesso Inicial como Administrador
+1. Acesse a tela de login (`/login`).
+2. Entre com as credenciais padrão do administrador (criadas automaticamente no banco no primeiro acesso):
+   * **E-mail:** `admin@antenas.com`
+   * **Senha:** `123`
+3. No painel administrativo (`/admin`), cadastre uma conta com o perfil **Professor** (informando nome, e-mail e senha) e clique em **Sair da Conta**.
 
-Projeto acadêmico desenvolvido em grupo.
+### Passo 2: Cadastro de Turmas e Alunos (Perfil Professor)
+1. Faça login com o e-mail e a senha do **Professor** recém-criado.
+2. Acesse a aba **Turmas** e clique em **Adicionar Turma** para cadastrar uma disciplina (ex.: *Laboratório de Redes*, código *ENE001*, horário *Seg/Qua 14h*).
+3. Acesse a aba **Alunos** e clique em **Adicionar Aluno** para matricular estudantes na turma criada.
 
-## 10. Funcionamento
+### Passo 3: Registro de Frequência e Consulta de Relatórios
+1. Na tela **Início** (pelo calendário) ou dentro de **Turmas** (botão **Realizar Chamada**), selecione a data e o horário da aula.
+2. Marque **Presente** ou **Falta** para cada aluno e clique em **Salvar Chamada**.
+3. Acesse **Alunos** para visualizar os percentuais atualizados, utilizar os filtros de status/turma ou clicar sobre o nome de um aluno para abrir seu **relatório individual com gráfico**.
 
-Para fazer o frontEnd funcionar, deve-se colocar o comando npm run dev no terminal, estando na pasta FrontEnd.
+---
+
+## 💻 6. Como Executar Localmente
+
+### Pré-requisitos
+* **Node.js** (versão 18 ou superior)
+* Uma instância do **PostgreSQL** local ou gratuita na nuvem (ex.: [Neon](https://neon.tech))
+
+### 1. Clonar o repositório
+```bash
+git clone https://github.com/rafaeldasilva-byte/Desafio-4---Antenas-de-Ouro.git
+cd Desafio-4---Antenas-de-Ouro
+git checkout feat/integracao-frontend-banco
+```
+
+### 2. Configurar o Banco de Dados
+Execute o script SQL de criação das tabelas (`turmas`, `alunos`, `matriculas`, `aulas`, `frequencias` e `usuarios`) no seu banco PostgreSQL.
+
+### 3. Configurar as Variáveis de Ambiente
+Dentro da pasta `FrontEnd`, crie um arquivo chamado `.env.local` e adicione a string de conexão do seu banco PostgreSQL:
+
+```env
+DATABASE_URL="postgresql://usuario:senha@host:5432/nome_do_banco?sslmode=require"
+```
+
+### 4. Instalar Dependências e Iniciar o Servidor
+Entre na pasta `FrontEnd`, instale os pacotes e inicie a aplicação:
+
+```bash
+cd FrontEnd
+npm install
+npm run dev
+```
+
+Abra [http://localhost:3000](http://localhost:3000) no navegador para utilizar o sistema.
+
+---
+
+## 📁 7. Estrutura do Projeto
+
+```text
+Desafio-4---Antenas-de-Ouro/
+├── FrontEnd/
+│   ├── app/
+│   │   ├── admin/              # Painel administrativo de gestão de usuários
+│   │   ├── alunos/             # Listagem com filtros e relatório individual ([id])
+│   │   ├── api/
+│   │   │   ├── auth/           # Endpoint REST de autenticação e seed inicial
+│   │   │   └── dados/          # Endpoint REST de turmas, alunos, aulas e métricas
+│   │   ├── chamada/[turmaId]/  # Tela de registro e edição de frequência
+│   │   ├── components/         # Componentes reutilizáveis (Header, Sidebar, Calendario, Painel, etc.)
+│   │   ├── lib/                # Conexão com PostgreSQL (pool pg)
+│   │   ├── login/              # Tela de autenticação
+│   │   ├── turmas/             # Gerenciamento de turmas
+│   │   ├── globals.css         # Estilos globais e regras de Dark Mode
+│   │   └── page.tsx            # Dashboard inicial com calendário
+│   ├── public/                 # Ícones, logos e imagens estáticas
+│   └── package.json
+└── README.md
+```
+
+---
+
+## 🤝 8. Equipe
+
+Projeto desenvolvido pela equipe de Trainees da **EngNet — Consultoria em Engenharia de Redes e Telecomunicações (UnB)**.
